@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIC TAC TOE</title>
+    <link rel="icon" href="yin-yanga.svg">
+
+</head>
+
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Font Awesome 6 pro Solid';
+            letter-spacing: .2ch;
+            word-spacing: .4ch;
+            transition: 0.5s;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.4)
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 4ch;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #efa2b4, #aef1ee);
+            z-index: 1;
+            border: 0;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            background: #cddc39;
+            opacity: 0.12;
+            height: 100vh;
+            width: 100%;
+            z-index: -1;
+        }
+
+        .wrapper {
+            padding: 1ch;
+            border-radius: 1ch;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1.4px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 1ch 3ch rgba(0, 0, 0, 0.1);
+            min-height: 43ch;
+            min-width: 43ch;
+            display: grid;
+            place-items: center;
+            backdrop-filter: blur(5px);
+            scale: 0;
+        }
+
+        .cards {
+            display: grid;
+            place-items: center;
+            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            border: 0;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.25s linear;
+            height: 80%;
+            width: 80%;
+            line-height: 1.5;
+            background-color: rgba(255, 255, 255, 0.35);
+            border-radius: 2ch;
+            color: #efa2b4;
+            user-select: none;
+            cursor: pointer;
+            transition: 0.3 ease;
+        }
+
+        .cards {
+            height: 89%;
+            width: 89%;
+
+
+        }
+
+        .main {
+            width: 43ch;
+            height: 9ch;
+            background: rgba(255, 255, 255, 0.25);
+            display: grid;
+            place-items: center;
+            grid-template-rows: repeat(1, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1ch;
+            border-radius: 1ch;
+            scale: 0;
+        }
+
+        .label {
+            height: 5ch;
+            width: 17ch;
+            display: grid;
+            place-items: center;
+            border: 0;
+        }
+
+
+        .slider {
+            background-color: #89b1a9;
+            border-radius: 1ch;
+            position: absolute;
+            height: 5ch;
+            width: 17ch;
+            align-self: center;
+            justify-self: start;
+            translate: 11.7%;
+            z-index: 0;
+            transition: .4s;
+            transition: translate 0.4s;
+            border: 0;
+        }
+
+
+
+        .result {
+            position: absolute;
+            height: 20ch;
+            width: 39ch;
+            background: #ffffff40;
+            z-index: 2;
+            scale: 0;
+            transition: scale 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #56baed;
+            font-size: 2ch;
+            flex-direction: column;
+            gap: 5ch;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.25);
+            color: #89b1a9;
+            padding: 1ch;
+            border-radius: 1ch;
+            height: 4ch;
+            width: 13ch;
+            text-align: center;
+            cursor: pointer;
+        }
+
+
+        .result p {
+            color: #89b1a9;
+        }
+
+
+        i {
+            font-size: 4ch;
+            color: #56baed;
+            pointer-events: none;
+        }
+
+        p {
+            color: #efefef;
+            z-index: 1;
+            transition: .4s;
+            text-align: center;
+            line-height: 3ch;
+            border: 0;
+        }
+
+        .p2 {
+            color: #89b1a9;
+        }
+
+        .move {
+            translate: 141%;
+        }
+
+        .move1 {
+            color: #89b1a9;
+        }
+
+        .move2 {
+            color: #F8F8F8;
+        }
+
+        img {
+            cursor: pointer;
+            scale: 0.3;
+            border: 0;
+        }
+
+        .select {
+            width: 5214h;
+            height: 9ch;
+            background: rgba(255, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            border-radius: 1ch;
+            position: absolute;
+        }
+
+        .choose {
+            height: 4ch;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            border: 0;
+        }
+
+        .choose p {
+            border: 0;
+        }
+
+        .select {
+            width: 52ch;
+            height: 16ch;
+            background: rgba(255, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 1ch;
+            border-radius: 1ch;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+
+        }
+
+        .option {
+            height: 5ch;
+            width: 17ch;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 0;
+            width: 100%;
+        }
+
+
+        .ques {
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 0;
+        }
+
+        .ques p {
+            color: #89b1a9;
+        }
+
+        .option p {
+            background: #89b1a9;
+            padding: 1ch 2.5ch;
+            border-radius: 1ch;
+            cursor: pointer;
+        }
+    </style>
+    <div class="main">
+        <div class="label">
+            <p>x's turn</p>
+        </div>
+        <div class="label">
+            <p class="p2">o's turn</p>
+        </div>
+        <div class="slider">
+            <p></p>
+        </div>
+    </div>
+    <div class="wrapper t1" style="transition: all 0.4s ease 0s;">
+        <div class="cards">
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+        </div>
+    </div>
+    <div class="result">
+        <p id="q"></p>
+        <div class="btn">replay</div>
+    </div>
+    <div class="select">
+        <div class="ques">
+            <p>Which player do you want to play ?</p>
+        </div>
+        <div class="option">
+            <p id="chx">x Player</p>
+            <p id="cho">o Player</p>
+        </div>
+    </div>
+    <!-- <script src="app.js"> </script> -->
+    <script>0
+        document.getElementById("chx").onclick = e => { isX = true; play(); document.querySelector(".select").style.scale = "0"; };
+        document.getElementById("cho").onclick = e => { isX = false; play(); document.querySelector(".select").style.scale = "0"; add(); };
+        function play () {
+            document.querySelector(".wrapper").style.scale = "1";
+            document.querySelector(".main").style.scale = "1";
+        }
+        let clicked = 0;
+        let noChild = [];
+        let isRobo = true;
+        function isarraypure (ar) {
+            let ct = 1;
+            for (let i = 1; i < ar.length; i++)
+            {
+                if (ar[ i - 1 ] == ar[ i ] && ar[ i ] != null) { ct++; }
+            }
+            if (ct == (ar.length))
+            {
+                return true;
+
+            } else
+            {
+                return false;
+            }
+        }
+        let q = document.getElementById("q");
+        function a (fost) {
+            return Array.from(fost);
+        } function cakr (fost) {
+            return Array.isArray(fost);
+        } function lg (fost) {
+            return console.log(fost);
+        } function rnd (num) {
+            return Math.floor(Math.random() * num);
+        }
+        let isX = true;
+        let turn;
+        let trflsvlar = [];
+        let card = document.querySelectorAll(".card");
+        card.forEach(el => {
+
+            el.addEventListener("click", a);
+
+        });
+        function a (s) {
+            clicked++;
+            if (isX)
+            {
+                turn = "x";
+                s.target.innerHTML = `<img src="x.svg">`;
+                isX = false;
+                card.forEach(ko => ko.style.pointerEvents = "none");
+                setTimeout(() => {
+                    roboclik();
+                    setTimeout(() => {
+                        card.forEach(ko => ko.style.pointerEvents = "all");
+                    }, 10);
+                }, 500);
+
+                add();
+                // lg(turn);
+            }
+            else
+            {
+                turn = "o";
+                s.target.innerHTML = `<img src="o.svg">`;
+                isX = true;
+                card.forEach(ko => ko.style.pointerEvents = "none");
+                setTimeout(() => {
+                    roboclik();
+                    setTimeout(() => {
+                        card.forEach(ko => ko.style.pointerEvents = "all");
+                    }, 10);
+                }, 500);
+
+                remove();
+                // lg(turn);
+            }
+
+
+            s.target.removeEventListener("click", a);
+            checkWinCombo();
+            draw();
+
+        }
+        function draw (params) {
+            if (clicked == 9 && trflsvlar.some(e => e != true))
+            {
+                var resulttext = "game has been drawn !!";
+                document.querySelector("#q").innerHTML = resulttext;// p tag in result
+                document.querySelector(".wrapper").style.scale = "0";
+                document.querySelector(".main").style.display = "none";
+                document.querySelector(".result").style.scale = "1";
+                clicked = 0;
+                trflsvlar = [];//true false value array
+            }
+        }
+        function checkWinCombo (params) {
+            winartxt = [];
+            for (let i = 0; i < 8; i++)
+            {
+                winartxt.push(winarnm[ i ].map(e => card[ e ].innerHTML[ 10 ]));
+            }
+            trflsar = [];
+            for (let i = 0; i < 8; i++)
+            {
+                trflsar.push([ isarraypure(winartxt[ i ]) ]);
+            }
+            trflsar.forEach(e => trflsvlar.push(e[ 0 ]));
+        }
+        let winarnm = [
+            [ 0, 1, 2 ], [ 3, 4, 5 ], [ 6, 7, 8 ], [ 0, 3, 6 ], [ 1, 4, 7 ], [ 2, 5, 8 ], [ 0, 4, 8, ], [ 2, 4, 6 ]
+        ];
+        let winartxt = [];
+        let trflsar = [];
+        window.onclick = e => {
+            win();
+        };
+        function win () {
+            if (trflsvlar.some(e => e == true))
+            {
+                var resulttext = `player  ${turn} ` + "  has won the game !!";
+                document.querySelector("#q").innerHTML = resulttext;// p tag in result
+                document.querySelector(".wrapper").style.scale = "0";
+                document.querySelector(".main").style.display = "none";
+                document.querySelector(".result").style.scale = "1";
+                trflsvlar = [];//true false value array
+                setTimeout(() => {
+                    card.forEach(k => {
+                        if (turn == "x")
+                        {
+                            isX = true;
+                            remove();
+                        } else
+                        {
+                            isX = false;
+                            add();
+                        }
+                    });
+                }, 100);
+                card.forEach(k => {
+                    k, removeEventListener("click", a);
+                });
+                clicked = 0;
+                noChild = [];
+            }
+        }
+
+        function add () {
+            document.querySelector(".slider").classList.add("move");
+            document.querySelector("p").classList.add("move1");
+            document.querySelector(".p2").classList.add("move2");
+        }
+        function remove () {
+            document.querySelector(".slider").classList.remove("move");
+            document.querySelector("p").classList.remove("move1");
+            document.querySelector(".p2").classList.remove("move2");
+        }
+        document.querySelector(".btn").onclick = e => {
+
+            // fac = true;
+            document.querySelector(".wrapper").style.scale = "1";
+            document.querySelector(".main").style.display = "grid";
+            document.querySelector(".result").style.scale = "0";
+            card.forEach(l => l.addEventListener("click", a));
+            card.forEach(l => l.innerHTML = null);
+            clicked = 0;
+            noChild = [];
+            isRobo = true;
+            if (noChild.length == 0 && isX == false)
+            {
+                setTimeout(() => {
+                    roboclik();
+                }, 500);
+            }
+        };
+        function robo () {
+            noChild = [];
+            if (isRobo == true)
+            {
+                card.forEach(ed => {
+                    if (ed.innerHTML == "")
+                    {
+                        noChild.push(ed);
+                    }
+                });
+            }
+            else
+            {
+                lg("Oh ! game has been ended !");
+            }
+
+        }
+        function roboclik (params) {
+
+            robo();
+            elnochld = noChild[ rnd(noChild.length) ];
+            if (elnochld != null)
+            {
+                clicked++;
+                if (isX)
+                {
+                    elnochld.innerHTML = `<img src="x.svg">`;
+
+
+                    // lg(turn);
+                    add();
+                    checkWinCombo();
+                    turn = "x";
+                    win();
+                    isX = false;
+                }
+                else
+                {
+                    // lg(turn);
+
+                    noChild[ rnd(noChild.length) ].innerHTML = `<img src="o.svg">`;
+
+                    remove();
+                    checkWinCombo();
+                    turn = "o";
+                    win();
+                    isX = true;
+                }
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>
