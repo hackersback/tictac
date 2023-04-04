@@ -12,20 +12,15 @@
 
 <body>
     <style>
-     
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins';
-            letter-spacing: .2ch;
-            word-spacing: .4ch;
+            font-family: 'poppins';
             transition: 0.5s;
             user-select: none;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.4)
         }
 
         body {
@@ -38,6 +33,7 @@
             background: linear-gradient(to bottom right, #efa2b4, #aef1ee);
             z-index: 1;
             border: 0;
+            overflow: hidden;
         }
 
         body::after {
@@ -271,6 +267,11 @@
             border-radius: 1ch;
             cursor: pointer;
         }
+
+        .noevnt,
+        .nowinevnt {
+            pointer-events: none;
+        }
     </style>
     <div class="main">
         <div class="label">
@@ -308,18 +309,20 @@
             <p id="chx">x Player</p>
             <p id="cho">o Player</p>
         </div>
+        <audio src="oh.mp3"></audio>
     </div>
-    <!-- <script src="app.js"> </script> -->
-    <script>0
+
+    <script>
+            window.addEventListener('load',booo=>{
         document.getElementById("chx").onclick = e => { isX = true; play(); document.querySelector(".select").style.scale = "0"; };
         document.getElementById("cho").onclick = e => { isX = false; play(); document.querySelector(".select").style.scale = "0"; add(); };
         function play () {
             document.querySelector(".wrapper").style.scale = "1";
             document.querySelector(".main").style.scale = "1";
+            document.querySelector("audio").play();
+            document.querySelector("audio").loop = true;
+            document.querySelector("html").requestFullscreen();
         }
-        let clicked = 0;
-        let noChild = [];
-        let isRobo = true;
         function isarraypure (ar) {
             let ct = 1;
             for (let i = 1; i < ar.length; i++)
@@ -335,6 +338,7 @@
                 return false;
             }
         }
+
         let q = document.getElementById("q");
         function a (fost) {
             return Array.from(fost);
@@ -345,10 +349,15 @@
         } function rnd (num) {
             return Math.floor(Math.random() * num);
         }
+        let card = document.querySelectorAll(".card");
+        let clicked = 0;
+        let noChild = [];
+        let isRobo = true;
         let isX = true;
         let turn;
         let trflsvlar = [];
-        let card = document.querySelectorAll(".card");
+        let winartxt = [];
+        let trflsar = [];
         card.forEach(el => {
 
             el.addEventListener("click", a);
@@ -361,32 +370,34 @@
                 turn = "x";
                 s.target.innerHTML = `<img src="x.svg">`;
                 isX = false;
-                card.forEach(ko => ko.style.pointerEvents = "none");
+                card.forEach(ko => ko.classList.add("noevnt"));
                 setTimeout(() => {
                     roboclik();
                     setTimeout(() => {
-                        card.forEach(ko => ko.style.pointerEvents = "all");
+                        card.forEach(ko => ko.classList.remove("noevnt"));
+
                     }, 10);
                 }, 500);
 
                 add();
                 // lg(turn);
             }
+
             else
             {
                 turn = "o";
                 s.target.innerHTML = `<img src="o.svg">`;
                 isX = true;
-                card.forEach(ko => ko.style.pointerEvents = "none");
+                card.forEach(ko => ko.classList.add("noevnt"));
                 setTimeout(() => {
                     roboclik();
                     setTimeout(() => {
-                        card.forEach(ko => ko.style.pointerEvents = "all");
+                        card.forEach(ko => ko.classList.remove("noevnt"));
                     }, 10);
                 }, 500);
 
                 remove();
-                // lg(turn);
+                // lg(turn);[]
             }
 
 
@@ -395,8 +406,11 @@
             draw();
 
         }
-        function draw (params) {
-            if (clicked == 9 && trflsvlar.some(e => e != true))
+        function ckar (a) {
+            if (a.filter(e => e == a[ 0 ]).length == a.length) { return true; } else { return false; }
+        };
+        function draw () {
+            if (clicked == 9 && ckar(trflsvlar) == true)
             {
                 var resulttext = "game has been drawn !!";
                 document.querySelector("#q").innerHTML = resulttext;// p tag in result
@@ -407,8 +421,12 @@
                 trflsvlar = [];//true false value array
             }
         }
-        function checkWinCombo (params) {
-            winartxt = [];
+        let winarnm = [
+            [ 0, 1, 2 ], [ 3, 4, 5 ], [ 6, 7, 8 ], [ 0, 3, 6 ], [ 1, 4, 7 ], [ 2, 5, 8 ], [ 0, 4, 8, ], [ 2, 4, 6 ]
+        ];
+        function checkWinCombo () {
+            trflsvlar = [];
+            winartxt = [];//div Element innerHTML
             for (let i = 0; i < 8; i++)
             {
                 winartxt.push(winarnm[ i ].map(e => card[ e ].innerHTML[ 10 ]));
@@ -420,23 +438,19 @@
             }
             trflsar.forEach(e => trflsvlar.push(e[ 0 ]));
         }
-        let winarnm = [
-            [ 0, 1, 2 ], [ 3, 4, 5 ], [ 6, 7, 8 ], [ 0, 3, 6 ], [ 1, 4, 7 ], [ 2, 5, 8 ], [ 0, 4, 8, ], [ 2, 4, 6 ]
-        ];
-        let winartxt = [];
-        let trflsar = [];
         window.onclick = e => {
             win();
         };
         function win () {
             if (trflsvlar.some(e => e == true))
             {
+                card.forEach(ko => ko.classList.add("nowinevnt"));
                 var resulttext = `player  ${turn} ` + "  has won the game !!";
                 document.querySelector("#q").innerHTML = resulttext;// p tag in result
                 document.querySelector(".wrapper").style.scale = "0";
                 document.querySelector(".main").style.display = "none";
                 document.querySelector(".result").style.scale = "1";
-                trflsvlar = [];//true false value array
+                //true false value array
                 setTimeout(() => {
                     card.forEach(k => {
                         if (turn == "x")
@@ -479,12 +493,16 @@
             clicked = 0;
             noChild = [];
             isRobo = true;
+            trflsvlar = [];
             if (noChild.length == 0 && isX == false)
             {
                 setTimeout(() => {
                     roboclik();
                 }, 500);
             }
+            card.forEach(ko => ko.classList.remove("nowinevnt"));
+            elementwhohasnochild.classList.remove("nowinevnt");
+
         };
         function robo () {
             noChild = [];
@@ -503,41 +521,48 @@
             }
 
         }
-        function roboclik (params) {
-
+        let rndmno;
+        function roboclik () {
             robo();
-            elnochld = noChild[ rnd(noChild.length) ];
-            if (elnochld != null)
+            rndmno = rnd(noChild.length);
+            elementwhohasnochild = noChild[ rndmno ];
+            if (elementwhohasnochild != null && elementwhohasnochild != undefined)
             {
                 clicked++;
                 if (isX)
                 {
-                    elnochld.innerHTML = `<img src="x.svg">`;
-
+                    elementwhohasnochild.classList.add("nowinevnt");
+                    elementwhohasnochild.innerHTML = `<img src="x.svg">`;
+                    // lg(elementwhohasnochild);
 
                     // lg(turn);
                     add();
                     checkWinCombo();
                     turn = "x";
                     win();
+                    draw();
                     isX = false;
                 }
                 else
                 {
                     // lg(turn);
 
-                    noChild[ rnd(noChild.length) ].innerHTML = `<img src="o.svg">`;
+                    elementwhohasnochild.classList.add("nowinevnt");
+                    elementwhohasnochild.innerHTML = `<img src="o.svg">`;
 
                     remove();
                     checkWinCombo();
                     turn = "o";
                     win();
+                    draw();
                     isX = true;
                 }
             }
 
 
         }
+    })
+
     </script>
 </body>
 
